@@ -1,0 +1,26 @@
+---
+const steps = [
+  { title: "1. Wybierz sposób przesyłania danych", text: "Przesyłanie plików lub podanie linku." },
+  { title: "2. Wprowadź numer telefonu", text: "Otrzymasz kod weryfikacyjny SMS." },
+  { title: "3. Wprowadź kod SMS", text: "Zweryfikuj numer telefonu." },
+  { title: "4. Podaj dane i załącz pliki", text: "Imię, nazwisko, umowa kredytowa, aneksy, korespondencja z bankiem. Maks. 10 plików (PDF, JPG, PNG) lub podaj link." },
+  { title: "5. Oczekuj na kontakt", text: "Nasz specjalista przeanalizuje Twoją sprawę." }
+];
+---
+
+
+<div class="container my-5">
+    <p class="text-uppercase text-center text-light fs-5">Proces przesyłania dokumentów i weryfikacji tożsamości</p>
+    <div class="row justify-content-center">
+        {steps.map(step => (
+            <div class="col-lg-4 mb-3">
+                <div class="card bg-warning text-dark h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{step.title}</h5>
+                        <p class="card-text flex-grow-1">{step.text}</p>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+</div>

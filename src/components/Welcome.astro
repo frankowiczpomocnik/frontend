@@ -1,0 +1,15 @@
+---
+import Choice from "./Choice";
+import Instruction from "./Instruction.astro";
+import Title from "./Title.astro";
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+---
+<div class="container">	
+<Title />
+<Instruction />
+<Choice host={apiUrl} client:load/>
+<!-- <Choice host="http://localhost:3000/api" client:load/> -->
+<!-- <Choice host="https://law-f4xw.onrender.com" client:load/> -->
+</div>

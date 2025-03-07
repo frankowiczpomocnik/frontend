@@ -1,0 +1,23 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$custom-colors:("royalgreen": rgb(133,197,33));
+
+$theme-colors: map-merge(
+  $theme-colors,
+  $custom-colors
+);
+
+
+
+@import "bootstrap/scss/bootstrap";
+
+body{
+  font-family: Oswald;
+  background-color: rgba(40, 42, 49, 0.863) !important;
+  color: rgb(255, 255, 255);
+}
+
+.max_width{
+  max-width: max-content;
+}
