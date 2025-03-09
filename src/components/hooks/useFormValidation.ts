@@ -19,7 +19,7 @@ interface UseFormValidationOptions {
 // Generic custom hook for form validation with OTP flow
 export function useFormValidation({ host, onStepChange, onSuccess }: UseFormValidationOptions) {
   const [state, setState] = useState<FormState>({
-    step: 3,
+    step: 1,
     loading: false,
     message: "",
     phoneError: "",

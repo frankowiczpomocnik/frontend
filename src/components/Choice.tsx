@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Form from "./FileForm";
+import Form from "./FileFormstwo";
 import LinkForm from "./LinkForm";
 
 interface ChoiseProps {
@@ -17,8 +17,8 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
               <div className="text-uppercase text-center text-light fs-5">Wybierz sposób przesyłania danych</div>
               <div className="mb-3 text-center">Możesz przesłać pliki bezpośrednio lub podać link do Google Drive/Dropbox.</div>
               <div className="d-flex justify-content-center gap-3">
-                <button className="btn btn-primary" onClick={() => setSelectedOption("files")}>📂 Prześlij pliki</button>
-                <button className="btn btn-secondary" onClick={() => setSelectedOption("link")}>🔗 Podaj link</button>
+                <button className="btn btn-primary fs-5" onClick={() => setSelectedOption("files")}>📂 Prześlij pliki</button>
+                <button className="btn btn-royalgreen text-white fs-5" onClick={() => setSelectedOption("link")}>🔗 Podaj link</button>
               </div>
             </div>
           ) : (
