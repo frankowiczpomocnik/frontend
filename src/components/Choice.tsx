@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Form from "./FileFormstwo";
+import Form from "./FileForm";
 import LinkForm from "./LinkForm";
 
 interface ChoiseProps {

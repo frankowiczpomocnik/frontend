@@ -45,20 +45,36 @@ const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      setFormData((prev) => {
-        const newFiles = [...prev.files];
-        newFiles[index] = files[0];
-        return { ...prev, files: newFiles };
-      });
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileInput = e.target.files;
+    
+    if (fileInput && fileInput.length > 0) {
+      // Проверяем, что не превышен лимит в 10 файлов
+      if (formData.files.length >= 10) {
+        return;
+      }
+      
+      const newFile = fileInput[0];
+      
+      // Добавляем новый файл в массив, создавая новый массив
+      setFormData((prev) => ({
+        ...prev,
+        files: [...prev.files, newFile]
+      }));
+      
+      // Очищаем input после добавления файла
+      e.target.value = "";
     }
   };
 
   const handleFileRemove = (index: number) => {
+    // Более безопасное удаление файла
     setFormData((prev) => {
-      const newFiles = prev.files.filter((_, i) => i !== index);
+      // Создаем копию массива файлов
+      const newFiles = [...prev.files];
+      // Удаляем файл по индексу
+      newFiles.splice(index, 1);
+      // Возвращаем обновленное состояние
       return { ...prev, files: newFiles };
     });
   };
@@ -87,7 +103,11 @@ const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
     const data = new FormData();
     data.append("name", formData.name);
     data.append("phone", formData.phone);
-    formData.files.forEach((file) => data.append("files", file));
+    formData.files.forEach((file) => {
+      if (file) {
+        data.append("files", file);
+      }
+    });
 
     try {
       const response = await fetch(`${host}/clients`, {
@@ -152,26 +172,38 @@ const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
 
               <div className="mb-3">
                 <label className="form-label">Pliki</label>
-                {Array.from({ length: Math.min(formData.files.length + 1, 10) }).map((_, index) => (
-                  <div key={index} className="d-flex align-items-center gap-2 mb-2">
-                    <input
-                      type="file"
-                      className="form-control"
-                      onChange={(e) => handleFileChange(e, index)}
-                      disabled={formData.files.length >= 10}
-                      value={index === formData.files.length ? "" : undefined}
-                    />
-                    {index < formData.files.length && (
+                
+                {/* Список загруженных файлов с проверкой на существование */}
+                {formData.files.map((file, index) => (
+                  file && (
+                    <div key={index} className="d-flex align-items-center mb-2 p-2 rounded bg-royalgreen ">
+                      <div className="flex-grow-1 text-truncate fs-6">
+                        {file.name}
+                      </div>
                       <button 
                         type="button" 
-                        className="btn btn-danger" 
+                        className="btn btn-danger btn-sm ms-2" 
                         onClick={() => handleFileRemove(index)}
                       >
                         Usuń
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )
                 ))}
+                
+                {/* Инпут для загрузки следующего файла (если не превышен лимит в 10 файлов) */}
+                {formData.files.length < 10 && (
+                  <div className="mt-2">
+                    <input
+                      type="file"
+                      className="form-control"
+                      onChange={handleFileChange}
+                    />
+                    <div className="text-white fs-6">
+                      Możesz dodać {10 - formData.files.length} więcej {10 - formData.files.length === 1 ? 'plik' : 'plików'}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button 
@@ -190,4 +222,3 @@ const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
 };
 
 export default ClientForm;
-
