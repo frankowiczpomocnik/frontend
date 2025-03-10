@@ -8,6 +8,9 @@ interface ChoiseProps {
 
 const Choice: React.FC<ChoiseProps> = ({ host }) => {
   const [selectedOption, setSelectedOption] = useState<"files" | "link" | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+ 
   return (
     <div className="row">
       <div className="col-12">
@@ -19,6 +22,7 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
               <div className="d-flex justify-content-center gap-3">
                 <button className="btn btn-primary fs-5" onClick={() => setSelectedOption("files")}>📂 Prześlij pliki</button>
                 <button className="btn btn-royalgreen text-white fs-5" onClick={() => setSelectedOption("link")}>🔗 Podaj link</button>
+                {message && <div className="alert alert-info fs-5">{message}</div>}
               </div>
             </div>
           ) : (
@@ -26,7 +30,9 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
               <button className="btn btn-dark mb-3 col-2 mx-auto py-3 fs-5" onClick={() => setSelectedOption(null)}>
                 ⬅ Wróć do wyboru
               </button>
-              {selectedOption === "files" ? <Form host={host} setChoice={()=>{setSelectedOption(null)}} /> : <LinkForm host={host} />}
+              {selectedOption === "files" ? <Form host={host}
+               setChoice={()=>{setSelectedOption(null)}}
+                setSuccess={(message:string)=>{setMessage(message)}}/> : <LinkForm host={host} />}
             </div>
           )}
         </div>

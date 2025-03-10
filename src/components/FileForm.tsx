@@ -13,6 +13,7 @@ interface FormDataState {
 interface ClientFormProps {
   host: string;
   setChoice: ()=>void;
+  setSuccess: (message:string)=>void;
 }
 
 const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
@@ -114,6 +115,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
       const response = await fetch(`${host}/clients`, {
         method: "POST",
         body: data,
+        credentials: "include",
       });
 
       const result = await response.json();
@@ -121,8 +123,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
         setMessage("✅ Pliki zostały pomyślnie dodany!");
         setFormData({ name: "", phone: "", files: [] });
         resetForm("✅ Pliki zostały pomyślnie dodany!");
-        setTimeout(()=>{setChoice()}, 2000);
-        setChoice()
+        setChoice()       
       } else {
         setMessage(`❌ Błąd: ${result.error}`);
       }
