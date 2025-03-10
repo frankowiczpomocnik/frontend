@@ -121,6 +121,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
         setMessage("✅ Pliki zostały pomyślnie dodany!");
         setFormData({ name: "", phone: "", files: [] });
         resetForm("✅ Pliki zostały pomyślnie dodany!");
+        setTimeout(()=>{setChoice()}, 2000);
         setChoice()
       } else {
         setMessage(`❌ Błąd: ${result.error}`);
