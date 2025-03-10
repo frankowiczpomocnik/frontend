@@ -12,9 +12,10 @@ interface FormDataState {
 
 interface ClientFormProps {
   host: string;
+  setChoice: ()=>void;
 }
 
-const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
+const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
   const [formData, setFormData] = useState<FormDataState>({
     name: "",
     phone: "",
@@ -120,6 +121,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host }) => {
         setMessage("✅ Pliki zostały pomyślnie dodany!");
         setFormData({ name: "", phone: "", files: [] });
         resetForm("✅ Pliki zostały pomyślnie dodany!");
+        setChoice()
       } else {
         setMessage(`❌ Błąd: ${result.error}`);
       }
