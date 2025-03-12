@@ -128,12 +128,15 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     setMessage("");
 
     try {
-      const response = await axios.post(`${host}/validate-otp`, {  
+      const response = await axios.post(`${host}/validate-otp`, {
+        phone, 
         otp: state.otp
       }, {
         withCredentials: true
       });
-      setMessage("✅ Kod weryfikacyjny potwierdzony!");        
+
+      setMessage("✅ Kod weryfikacyjny potwierdzony!");
+        
       setStep(3);       
       return true;
     } catch (error) {
