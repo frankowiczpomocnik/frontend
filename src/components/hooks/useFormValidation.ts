@@ -115,6 +115,8 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     }
   };
 
+  //Vas=lidate OTP
+
   const validateOtp = async (phone: string) => {
     // Check if OTP has exactly 4 digits
     if (state.otp.length !== 4 || state.otp.split('').some(digit => digit === '')) {
@@ -126,16 +128,12 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     setMessage("");
 
     try {
-      const response = await axios.post(`${host}/validate-otp`, {
-        phone, 
+      const response = await axios.post(`${host}/validate-otp`, {  
         otp: state.otp
       }, {
         withCredentials: true
       });
-
-      setMessage("✅ Kod weryfikacyjny potwierdzony!");
-      setState(prev => ({ ...prev, token: response.data.token }));
-      console.log("TOKEN", response.data.token);
+      setMessage("✅ Kod weryfikacyjny potwierdzony!");        
       setStep(3);       
       return true;
     } catch (error) {
