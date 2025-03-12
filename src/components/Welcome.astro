@@ -6,10 +6,19 @@ import Title from "./Title.astro";
 const apiUrl = import.meta.env.VITE_API_URL;
 ---
 
-<div class="container">
-    <dev class="d-flex d-flex flex-column gap-2 gap-lg-4">
-        <Title />
-        <Choice host={apiUrl} client:load />
-        <Instruction />
-    </dev>
-</div>
+<main>
+    <div class="container">
+        <div class="d-flex d-flex flex-column gap-2 gap-lg-4">
+            <Title />
+            <Choice host={apiUrl} client:load />
+            <Instruction />
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <p class="text-center text-white">
+            &copy; 2025. Wszelkie prawa zastrzeżone. | Ta strona wykorzystuje pliki Cookie.
+        </p>
+    </div>
+</footer>

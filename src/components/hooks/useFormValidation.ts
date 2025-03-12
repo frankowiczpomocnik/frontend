@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
+import axios from "axios";
+
 
 interface FormState {
   step: number;
@@ -8,6 +10,7 @@ interface FormState {
   phoneError: string;
   otpError: string;
   otp: string;
+  token: string | null;
 }
 
 interface UseFormValidationOptions {
@@ -25,6 +28,7 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     phoneError: "",
     otpError: "",
     otp: "",
+    token: null,
   });
 
   const setStep = (step: number) => {
@@ -122,27 +126,29 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     setMessage("");
 
     try {
-      const response = await fetch(`${host}/validate-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, otp: state.otp }),
+      const response = await axios.post(`${host}/validate-otp`, {
+        phone, 
+        otp: state.otp
+      }, {
+        withCredentials: true
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        setMessage("✅ Kod weryfikacyjny potwierdzony!");
-        setStep(3);
-        return true;
-      } else {
-        setMessage(`❌ Błąd: ${result.error}`);
-        return false;
-      }
+      setMessage("✅ Kod weryfikacyjny potwierdzony!");
+      setState(prev => ({ ...prev, token: response.data.token }));
+      console.log("TOKEN", response.data.token);
+      setStep(3);       
+      return true;
     } catch (error) {
-      setMessage("❌ Błąd serwera. Spróbuj ponownie później.");
+      if (axios.isAxiosError(error) && error.response) {
+        setMessage(`❌ Błąd: ${error.response.data.error}`);
+      } else {
+        setMessage("❌ Błąd serwera. Spróbuj ponownie później.");
+      }
       return false;
     } finally {
       setLoading(false);
     }
+  
   };
 
   const resetForm = (finishMessage:string) => {
@@ -153,6 +159,7 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
       phoneError: "",
       otpError: "",
       otp: "",
+      token: null,
     });
     onSuccess?.();
   };

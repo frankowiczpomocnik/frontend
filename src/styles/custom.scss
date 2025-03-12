@@ -18,6 +18,21 @@ body{
   color: rgb(255, 255, 255);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Минимальная высота body равна высоте viewport
+  margin: 0; // Убираем отступы по умолчанию
+
+  main {
+    flex: 1; // main занимает всё доступное пространство
+  }
+
+  footer {
+    flex-shrink: 0; // footer не сжимается
+  }
+}
+
 .max_width{
   max-width: max-content;
 }

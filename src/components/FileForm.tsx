@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import type { ChangeEvent, FormEvent } from "react";
 import PhoneStep from "./PhoneStep";
 import OtpStep from "./OtpStep";
@@ -30,6 +31,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
     phoneError,
     otpError: optError,
     otp,
+    token,
     handlePhoneChange,
     handleOtpChange,
     sendPhone,
@@ -101,7 +103,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
     
     setLoading(true);
     setMessage("");
-
+    
     const data = new FormData();
     data.append("name", formData.name);
     data.append("phone", formData.phone);
@@ -110,28 +112,28 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
         data.append("files", file);
       }
     });
-
+    
     try {
-      const response = await fetch(`${host}/clients`, {
-        method: "POST",
-        body: data,
-        credentials: "include",
+      const response = await axios.post(`${host}/files`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        setMessage("✅ Pliki zostały pomyślnie dodany!");
-        setFormData({ name: "", phone: "", files: [] });
-        resetForm("✅ Pliki zostały pomyślnie dodany!");
-        setChoice()       
-      } else {
-        setMessage(`❌ Błąd: ${result.error}`);
-      }
+      
+      setMessage("✅ Pliki zostały pomyślnie dodany!");
+      setFormData({ name: "", phone: "", files: [] });
+      resetForm("✅ Pliki zostały pomyślnie dodany!");
+      setChoice();
     } catch (error) {
-      setMessage("❌ Błąd serwera. Spróbuj ponownie później.");
+      if (axios.isAxiosError(error) && error.response) {
+        setMessage(`❌ Błąd: ${error.response.data.error}`);
+      } else {
+        setMessage("❌ Błąd serwera. Spróbuj ponownie później.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

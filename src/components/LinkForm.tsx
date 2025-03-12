@@ -28,6 +28,7 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host }) => {
     phoneError,
     otpError: optError,
     otp,
+    token,
     handlePhoneChange,
     handleOtpChange,
     sendPhone,
@@ -63,7 +64,10 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host }) => {
     try {
       const response = await fetch(`${host}/links`, {
         method: "POST",
+        credentials: "include",
+        // headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`,},
         headers: { "Content-Type": "application/json" },
+        
         body: JSON.stringify(formData),
       });
       
