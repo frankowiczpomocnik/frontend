@@ -27,7 +27,7 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
             </div>
           ) : (
             <div className="d-flex flex-column justify-center">
-              <button className="btn btn-dark mb-3 col-2 mx-auto py-3 fs-5" onClick={() => setSelectedOption(null)}>
+              <button className="btn btn-dark mb-3 col-lg-2 mx-auto py-3 fs-5" onClick={() => setSelectedOption(null)}>
                 ⬅ Wróć do wyboru
               </button>
               {selectedOption === "files" ? <Form host={host}
