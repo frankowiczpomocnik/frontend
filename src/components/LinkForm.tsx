@@ -12,9 +12,11 @@ interface FormDataState {
 
 interface ClientLinkProps {
   host: string;
+  setChoice: ()=>void;
+  setSuccess: (message:string)=>void;
 }
 
-const LinkForm: React.FC<ClientLinkProps> = ({ host }) => {
+const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) => {
   const [formData, setFormData] = useState<FormDataState>({
     name: "",
     phone: "",
@@ -73,9 +75,14 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host }) => {
       
       const result = await response.json();
       if (response.ok) {
-        setMessage("✅ Link został pomyślnie dodany!");
+        const successMessage = "✅ Pliki zostały pomyślnie dodany!";
+      setMessage(successMessage);
         setFormData({ name: "", phone: "", link: "" });
         resetForm("✅ Link został pomyślnie dodany!");
+
+         // Pass the success message to the parent component before returning to choice screen
+      setSuccess(successMessage);
+      setChoice();
       } else {
         setMessage(`❌ Błąd: ${result.error}`);
       }

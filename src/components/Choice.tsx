@@ -19,10 +19,10 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
             <div className="" >
               <div className="text-uppercase text-center text-light fs-5">Wybierz sposób przesyłania danych</div>
               <div className="mb-3 text-center">Możesz przesłać pliki bezpośrednio lub podać link do Google Drive/Dropbox.</div>
+              {message && <div className="alert alert-info fs-5 mx-auto mb-3 col-lg-4 text-center">{message}</div>}
               <div className="d-flex justify-content-center gap-3">
                 <button className="btn btn-primary fs-5" onClick={() => setSelectedOption("files")}>📂 Prześlij pliki</button>
-                <button className="btn btn-royalgreen text-white fs-5" onClick={() => setSelectedOption("link")}>🔗 Podaj link</button>
-                {message && <div className="alert alert-info fs-5">{message}</div>}
+                <button className="btn btn-royalgreen text-white fs-5" onClick={() => setSelectedOption("link")}>🔗 Podaj link</button>              
               </div>
             </div>
           ) : (
@@ -32,7 +32,8 @@ const Choice: React.FC<ChoiseProps> = ({ host }) => {
               </button>
               {selectedOption === "files" ? <Form host={host}
                setChoice={()=>{setSelectedOption(null)}}
-                setSuccess={(message:string)=>{setMessage(message)}}/> : <LinkForm host={host} />}
+                setSuccess={(message:string)=>{setMessage(message)}}/> : <LinkForm host={host}  setChoice={()=>{setSelectedOption(null)}}
+                setSuccess={(message:string)=>{setMessage(message)}} />}
             </div>
           )}
         </div>

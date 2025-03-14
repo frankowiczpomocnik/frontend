@@ -17,7 +17,7 @@ interface ClientFormProps {
   setSuccess: (message:string)=>void;
 }
 
-const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
+const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice, setSuccess }) => {
   const [formData, setFormData] = useState<FormDataState>({
     name: "",
     phone: "",
@@ -121,9 +121,13 @@ const ClientForm: React.FC<ClientFormProps> = ({ host, setChoice }) => {
         withCredentials: true
       });
       
-      setMessage("✅ Pliki zostały pomyślnie dodany!");
+      const successMessage = "✅ Pliki zostały pomyślnie dodany!";
+      setMessage(successMessage);
       setFormData({ name: "", phone: "", files: [] });
-      resetForm("✅ Pliki zostały pomyślnie dodany!");
+      resetForm(successMessage);
+      
+      // Pass the success message to the parent component before returning to choice screen
+      setSuccess(successMessage);
       setChoice();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
