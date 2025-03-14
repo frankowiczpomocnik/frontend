@@ -8,19 +8,21 @@ interface FormDataState {
   name: string;
   phone: string;
   link: string;
+  description: string;
 }
 
 interface ClientLinkProps {
   host: string;
-  setChoice: ()=>void;
-  setSuccess: (message:string)=>void;
+  setChoice: () => void;
+  setSuccess: (message: string) => void;
 }
 
-const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) => {
+const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess }) => {
   const [formData, setFormData] = useState<FormDataState>({
     name: "",
     phone: "",
     link: "",
+    description: "",
   });
 
   const {
@@ -37,10 +39,10 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) =
     validateOtp,
     setMessage,
     setLoading,
-    resetForm
+    resetForm,
   } = useFormValidation({ host });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === "phone") {
       handlePhoneChange(e);
@@ -62,34 +64,31 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) =
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    
+
     try {
       const response = await fetch(`${host}/links`, {
         method: "POST",
         credentials: "include",
-        // headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`,},
         headers: { "Content-Type": "application/json" },
-        
         body: JSON.stringify(formData),
       });
-      
+
       const result = await response.json();
       if (response.ok) {
-        const successMessage = "✅ Pliki zostały pomyślnie dodany!";
-      setMessage(successMessage);
-        setFormData({ name: "", phone: "", link: "" });
-        resetForm("✅ Link został pomyślnie dodany!");
+        const successMessage = "✅ Link został pomyślnie dodany!";
+        setMessage(successMessage);
+        setFormData({ name: "", phone: "", link: "", description: "" });
+        resetForm(successMessage);
 
-         // Pass the success message to the parent component before returning to choice screen
-      setSuccess(successMessage);
-      setChoice();
+        setSuccess(successMessage);
+        setChoice();
       } else {
         setMessage(`❌ Błąd: ${result.error}`);
       }
     } catch {
       setMessage("❌ Błąd serwera. Spróbuj ponownie później.");
     }
-    
+
     setLoading(false);
   };
 
@@ -98,7 +97,7 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) =
       <div className="row fs-4">
         <div className="mx-auto col-lg-6 py-3 px-4 border">
           {message && <div className="alert alert-info">{message}</div>}
-          
+
           {step === 1 && (
             <PhoneStep
               phone={formData.phone}
@@ -108,7 +107,7 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) =
               phoneError={phoneError}
             />
           )}
-          
+
           {step === 2 && (
             <OtpStep
               otp={otp}
@@ -118,32 +117,46 @@ const LinkForm: React.FC<ClientLinkProps> = ({ host, setChoice, setSuccess  }) =
               optError={optError}
             />
           )}
-          
+
           {step === 3 && (
             <form onSubmit={handleSubmit}>
-              <input 
-                type="text" 
-                name="name" 
-                value={formData.name} 
-                onChange={handleChange} 
-                placeholder="Imię i nazwisko" 
-                required 
-                className="form-control mb-2" 
-              />
-              <input 
-                type="text" 
-                name="link" 
-                value={formData.link} 
-                onChange={handleChange} 
-                placeholder="Wprowadź link" 
-                required 
-                className="form-control mb-2" 
-              />
-              <button 
-                type="submit" 
-                className="btn btn-primary" 
-                disabled={loading}
-              >
+              <div className="mb-3">
+                <label className="form-label">Imię i nazwisko</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Wprowadź link</label>
+                <input
+                  type="text"
+                  name="link"
+                  value={formData.link}
+                  onChange={handleChange}
+                  required
+                  className="form-control"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Dodatkowe informacje</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="form-control"
+                  rows={4}
+                  placeholder="Wpisz dodatkowe informacje dotyczące linku..."
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={loading}>
                 {loading ? "Wysyłanie..." : "Dodaj link"}
               </button>
             </form>

@@ -50,7 +50,7 @@ export function useFormValidation({ host, onStepChange, onSuccess }: UseFormVali
     return phoneRegex.test(phone);
   };
 
-  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
     const phoneError = validatePhone(value) ? "" : "Niepoprawny format numeru telefonu";
     setState(prev => ({ ...prev, phoneError }));
